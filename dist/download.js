@@ -36,10 +36,6 @@ function download(opts, assetName, downloadDest) {
             const assetDownloadPath = path.join(downloadDest, assetName);
 
             github.downloadAsset(asset, (error, istream) => {
-                if (error) {
-                    return reject(error);
-                }
-
                 console.log(`Downloading to ${assetDownloadPath}`);
                 if (process.stdout.isTTY && !opts.quiet) {
                     const bar = new ProgressBar('↓ ' + asset.name + ' [:bar] :percent', {
@@ -68,7 +64,6 @@ function unzip(zipPath, destinationDir) {
         yauzl.open(zipPath, { lazyEntries: true }, (err, zipFile) => {
             if (err) return reject(err);
 
-            zipFile.readEntry();
             zipFile.on('entry', entry => {
                 zipFile.openReadStream(entry, (err, readStream) => {
                     if (err) return reject(err);
